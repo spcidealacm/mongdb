@@ -1,4 +1,5 @@
 const app = require("./src/app")()
+require("./src/model/index")
 
 const port = 3000;
 app.listen(port, () => {
