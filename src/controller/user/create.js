@@ -11,6 +11,6 @@ module.exports = async ctx => {
 
     ctx.body = {
         message: "user created",
-        _id,
+        id: _id,
     }
 }

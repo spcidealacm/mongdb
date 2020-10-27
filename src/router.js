@@ -1,8 +1,8 @@
 const Router = require("koa-router")
 
-const validateId = require("./middleware/validateId")
+const { validateId, expendId } = require("./middleware")
 const User = require("./model/User")
-const { getUser, createUser, updateUser, deleteUser } = require("./controller/user")
+const { getUser, createUser, updateUser, deleteUser, listUser, bulkGet } = require("./controller/user")
 
 module.exports = () => {
 
@@ -16,19 +16,9 @@ module.exports = () => {
 
     router.delete("/user/:id", validateId, deleteUser)
 
-    router.get("/user/:page/:pageSize", async ctx => {
-        let { page, pageSize } = ctx.params;
-        page = +page;
-        pageSize = +pageSize;
+    router.get("/user/:page/:pageSize", listUser)
 
-        const skipCount = (page - 1) * pageSize;
-        const total = await User.find().countDocuments();
-        const users = await User.find().select("_id name").skip(skipCount).limit(pageSize);
-        ctx.body = {
-            total,
-            result: users
-        }
-    });
+    router.get("/bulk/user/:ids", expendId, bulkGet)
 
     return router;
 }
